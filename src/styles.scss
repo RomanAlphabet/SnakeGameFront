@@ -1,0 +1,100 @@
+@use '@angular/material' as mat;
+
+
+
+html {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+  color-scheme: dark;
+  background: #46494c;
+  transition:1s;
+
+  h1 {
+    transition: 100ms;
+    color: white;
+  }
+
+  .cell-1 {
+    background-color: #44ff44;
+  }
+
+  .cell-2 {
+    background-color: #ff4444;
+  }
+
+  .cell {
+    padding: 0;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #2e3133;
+    transition: background-color 0.3s;
+  }
+
+  button {
+    transition: 100ms;
+    font-family: "Arial", sans-serif;
+    font-weight: bold;
+    filter: invert(100%);
+  }
+
+  .menu {
+    button {
+      filter: invert(0%);
+      background: #2e3133;
+      color: white;
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255,255,255,255);
+      }
+    }
+  }
+
+  @include mat.theme((
+  color: mat.$azure-palette,
+  ));
+}
+
+html.light-mode {
+  transform-style: flat;
+  color-scheme: light;
+  background: #c5c3c6;
+
+  h1 {
+    transition: 100ms;
+    color: black;
+  }
+
+  .cell-1 {
+    background-color: blue;
+  }
+
+  .cell-2 {
+    background-color: #ff4444;
+  }
+
+  .cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #9e9d9e;
+    transition: background-color 0.3s;
+  }
+
+  button {
+    transition: 300ms;
+    filter: invert(0%);
+  }
+  .menu {
+    button {
+      background: #9e9d9e;
+      color: black;
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,1);
+      }
+    }
+  }
+  @include mat.theme((
+    color: mat.$azure-palette,
+  ));
+}

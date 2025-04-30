@@ -1,0 +1,11 @@
+.content {
+  font-weight: bold;
+  font-size: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  height: 10rem;
+}
+
+

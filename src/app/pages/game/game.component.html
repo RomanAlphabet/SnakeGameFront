@@ -1,0 +1,19 @@
+<div class="game-screen">
+  <div class="content">
+    <h2>Snake Game</h2>
+    @if (loading()) {
+      <p>Loading...</p>
+    } @else if (error()) {
+      <p class="error">{{ error() }}</p>
+    } @else {
+      <table *ngIf="board.length > 0" class="game-board">
+        <tr *ngFor="let row of board">
+          <td *ngFor="let cell of row"
+              [class]="'cell cell-' + cell"
+              [title]="cell">
+          </td>
+        </tr>
+      </table>
+    }
+  </div>
+</div>
