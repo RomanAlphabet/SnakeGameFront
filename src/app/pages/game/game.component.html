@@ -1,12 +1,12 @@
 <div class="game-screen">
   <div class="content">
-    <h2>Snake Game</h2>
+    <h1>Snake Game</h1>
     @if (loading()) {
       <p>Loading...</p>
     } @else if (error()) {
       <p class="error">{{ error() }}</p>
     } @else {
-      <table *ngIf="board.length > 0" class="game-board">
+      <table *ngIf="board.length > 0">
         <tr *ngFor="let row of board">
           <td *ngFor="let cell of row"
               [class]="'cell cell-' + cell"

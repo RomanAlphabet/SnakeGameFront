@@ -13,7 +13,7 @@ export interface Highscore {
 })
 export class HighscoresService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://330dc263-0c0a-4316-94eb-97c352aed749.mock.pstmn.io/highscores';
+  private apiUrl = 'https://94485659-65bb-4b22-b1eb-b5a344c254a9.mock.pstmn.io/highscores';
 
   private mockHighscores: Highscore[] = [
     { username: "Gracz1", score: 1500, date: new Date('2024-03-20') },
