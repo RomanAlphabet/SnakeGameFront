@@ -9,6 +9,14 @@
   transition: 0s;
 }
 
+p {
+  margin-top: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .save-paragraph {
   font-size: 4rem;
   padding: 0;
