@@ -80,11 +80,6 @@ export class GameComponent {
   }
 
   handleSaveScoreButtonClicked() {
-    const options = {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric"
-    };
     delay(200);
     alert("Your score has been saved!");
     this.highscoresService.setHighScore({
