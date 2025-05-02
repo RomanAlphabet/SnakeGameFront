@@ -1,50 +1,58 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, HostListener, inject, input, InputFunction, signal} from '@angular/core';
 import {Game, GameService} from '../../services/game.service';
-import {interval, of, subscribeOn, Subscription} from 'rxjs';
-import {NgForOf, NgIf} from '@angular/common';
+import {delay, interval, of, subscribeOn, Subscription} from 'rxjs';
+import {formatDate, NgForOf, NgIf} from '@angular/common';
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
+import {FormsModule} from '@angular/forms';
+import {HighscoresService} from '../../services/highscores.service';
+import {dateTimestampProvider} from 'rxjs/internal/scheduler/dateTimestampProvider';
+import {routes} from '../../app.routes';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-game',
   imports: [
     NgIf,
-    NgForOf
+    NgForOf,
+    FormsModule
   ],
   templateUrl: './game.component.html',
   standalone: true,
   styleUrl: './game.component.css'
 })
 export class GameComponent {
-  gameService = inject(GameService);
-  game = signal<Game>({board: [][1], snakeLength: 1});
-  loading = signal(true);
+  private gameService = inject(GameService);
+  private highscoresService = inject(HighscoresService);
+  game = signal<Game>({board: [][1], snakeLength: 1, isFinished: true});
+  loading = signal(false);
   error = signal<string | null>(null);
 
-  boardSubscription!: Subscription;
-  snakeSubscription!: Subscription;
-  board: number[][] = [][1];
+  private boardSubscription!: Subscription;
+  private snakeSubscription!: Subscription;
   direction: number = 1;
+  usernameInput: string = "";
 
   ngOnInit() {
     // this.boardSubscription = interval(100200)
     //   .subscribe(() => {this.getApiBoard()});
     //this.startGame();
     //if request ok then start to nizej
-    this.gameService.getBoard().subscribe({
-      next: (game) => {
-        this.board = game.board;
-        this.game.set(game);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err.message || 'Unknown error');
-        this.loading.set(false);
-      }
-    });
-    // this.boardSubscription = interval(1000000).subscribe(() => {
+    // this.gameService.getBoard().subscribe({
+    //   next: (game) => {
+    //     this.game.set(game);
+    //     this.loading.set(false);
+    //   },
+    //   error: (err) => {
+    //     this.error.set(err.message || 'Unknown error');
+    //     this.loading.set(false);
+    //   }
+    // });
+    // this.boardSubscription = interval(300).subscribe(() => {
     //   this.getApiBoard();
     // });
-    // this.snakeSubscription = interval(100000).subscribe(() => {
-    //   this.setSnakeMove(this.direction);
+    // this.snakeSubscription = interval(150).subscribe(() => {
+    //   console.log(this.direction)
+    //   // this.setSnakeMove(this.direction);
     // });
   }
 
@@ -55,7 +63,6 @@ export class GameComponent {
   getApiBoard() {
     this.gameService.getBoard().subscribe({
       next: (game) => {
-        this.board = game.board;
         this.game.set(game);
         this.loading.set(false);
       },
@@ -75,26 +82,46 @@ export class GameComponent {
     this.snakeSubscription?.unsubscribe();
   }
 
+  handleSaveScoreButtonClicked() {
+    const options = {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric"
+    };
+    // console.log(this.usernameInput);
+    // console.log(formatDate(dateTimestampProvider.now(), "dd-MM-yyyy", "en-GB"));
+    delay(200);
+    alert("Your score has been saved!");
+    this.highscoresService.setHighScore({
+      username: this.usernameInput,
+      score: this.game().snakeLength,
+      date: formatDate(dateTimestampProvider.now(), "dd-MM-yyyy", "en-GB")
+    });
+  }
+
+  @HostListener('window:keydown',['$event'])
   handleKeysDown(event: KeyboardEvent) {
     switch(event.key) {
       case 'ArrowUp':
-      case 'W':
+      case 'w':
+        console.log(1);
         this.direction = 1;
         break;
       case 'ArrowRight':
-      case 'D':
+      case 'd':
+        console.log(2);
         this.direction = 2;
         break;
       case 'ArrowDown':
-      case 'S':
+      case 's':
+        console.log(3);
         this.direction = 3;
         break;
       case 'ArrowLeft':
-      case 'A':
+      case 'a':
+        console.log(4);
         this.direction = 4;
         break;
     }
   }
-
-  protected readonly of = of;
 }

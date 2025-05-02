@@ -9,3 +9,25 @@
   transition: 0s;
 }
 
+.save-paragraph {
+  font-size: 2rem;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  margin-top: 2rem;
+}
+
+.username {
+  padding: 0;
+  box-sizing: border-box;
+  height: 5rem;
+  width: auto;
+}
+
+.save-button {
+  scale: 200%;
+  margin-top: 2rem;
+  padding-inline: 3rem;
+}

@@ -5,12 +5,18 @@
       <p>Loading...</p>
     } @else if (error()) {
       <p class="error">{{ error() }}</p>
+    } @else if (game().isFinished) {
+      <p class="save-paragraph">Save Your Score</p>
+      <a>Username:</a>
+      <input type="text" value="Username" class="username" title="Enter your username" [(ngModel)]="usernameInput">
+      <p class="save-paragraph">Your score: {{game().snakeLength}}</p>
+      <button class="save-button" title="Save score" (click)="handleSaveScoreButtonClicked()">Save score</button>
     } @else {
-      <table *ngIf="board.length > 0">
-        <tr *ngFor="let row of board">
+      <table *ngIf="game().board.length > 0">
+        <tr *ngFor="let row of game().board">
           <td *ngFor="let cell of row"
               [class]="'cell cell-' + cell"
-              [title]="cell">
+              [title]="cell" (keydown)="handleKeysDown($event)" tabindex="0">
           </td>
         </tr>
       </table>
