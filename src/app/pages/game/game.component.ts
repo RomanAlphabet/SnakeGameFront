@@ -23,30 +23,29 @@ import {Router} from '@angular/router';
 export class GameComponent {
   private gameService = inject(GameService);
   private highscoresService = inject(HighscoresService);
-  game = signal<Game>({board: [][1], snakeLength: 1, isFinished: true});
-  loading = signal(false);
+  game = signal<Game>({board: [][1], snakeLength: 1, isFinished: false});
+  loading = signal(true);
   error = signal<string | null>(null);
 
   private boardSubscription!: Subscription;
   private snakeSubscription!: Subscription;
   direction: number = 1;
   usernameInput: string = "";
-
   ngOnInit() {
     // this.boardSubscription = interval(100200)
     //   .subscribe(() => {this.getApiBoard()});
     //this.startGame();
     //if request ok then start to nizej
-    // this.gameService.getBoard().subscribe({
-    //   next: (game) => {
-    //     this.game.set(game);
-    //     this.loading.set(false);
-    //   },
-    //   error: (err) => {
-    //     this.error.set(err.message || 'Unknown error');
-    //     this.loading.set(false);
-    //   }
-    // });
+    this.gameService.getBoard().subscribe({
+      next: (game) => {
+        this.game.set(game);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err.message || 'Unknown error');
+        this.loading.set(false);
+      }
+    });
     // this.boardSubscription = interval(300).subscribe(() => {
     //   this.getApiBoard();
     // });

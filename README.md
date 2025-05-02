@@ -1,6 +1,6 @@
 # SnakeGameTest
 
-This project is a frontend site for university project called "SnakeGame" developed by Bartosz Romanowski and Oskar Koc.
+This project is a frontend site developed by Bartosz Romanowski for university project called "SnakeGame" developed by Bartosz Romanowski and Oskar Koc.
 It was made using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.7.
 
 ## Installing essential packages

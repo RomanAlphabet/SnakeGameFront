@@ -1,19 +1,20 @@
 <div class="game-screen">
   <div class="content">
-    <h1>Snake Game</h1>
     @if (loading()) {
       <p>Loading...</p>
     } @else if (error()) {
       <p class="error">{{ error() }}</p>
     } @else if (game().isFinished) {
-      <p class="save-paragraph">Save Your Score</p>
+      <h1>Save Your Score</h1>
+      <p class="save-paragraph">Your score: {{ game().snakeLength }}</p>
       <a>Username:</a>
-      <input type="text" value="Username" class="username" title="Enter your username" [(ngModel)]="usernameInput">
-      <p class="save-paragraph">Your score: {{game().snakeLength}}</p>
-      <button class="save-button" title="Save score" (click)="handleSaveScoreButtonClicked()">Save score</button>
+      <input type="text" value="Username" class="username-input" title="Enter your username"
+             [(ngModel)]="usernameInput">
+      <button title="Save score" (click)="handleSaveScoreButtonClicked()">Save score</button>
     } @else {
-      <table *ngIf="game().board.length > 0">
-        <tr *ngFor="let row of game().board">
+      <h1>Snake Game</h1>
+      <table *ngIf="this.game().board.length > 0">
+        <tr *ngFor="let row of this.game().board">
           <td *ngFor="let cell of row"
               [class]="'cell cell-' + cell"
               [title]="cell" (keydown)="handleKeysDown($event)" tabindex="0">
