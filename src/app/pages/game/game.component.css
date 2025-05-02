@@ -24,8 +24,8 @@ p {
 }
 
 a {
-  margin-top: 1rem;
-  font-size: 2rem;
+  margin-top: 4rem;
+  font-size: 3rem;
 }
 
 .username-input {
@@ -41,6 +41,7 @@ button {
   transition: 300ms;
   filter: invert(0%);
   scale: 200%;
-  margin-top: 2rem;
-  padding-inline: 3rem;
+  margin-top: 6rem;
+  padding: 0.5rem;
+  padding-inline: 2rem;
 }

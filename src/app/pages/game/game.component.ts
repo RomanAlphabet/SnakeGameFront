@@ -1,13 +1,10 @@
-import {Component, HostListener, inject, input, InputFunction, signal} from '@angular/core';
+import {Component, HostListener, inject, signal} from '@angular/core';
 import {Game, GameService} from '../../services/game.service';
-import {delay, interval, of, subscribeOn, Subscription} from 'rxjs';
+import {delay, Subscription} from 'rxjs';
 import {formatDate, NgForOf, NgIf} from '@angular/common';
-import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 import {FormsModule} from '@angular/forms';
 import {HighscoresService} from '../../services/highscores.service';
 import {dateTimestampProvider} from 'rxjs/internal/scheduler/dateTimestampProvider';
-import {routes} from '../../app.routes';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -23,29 +20,30 @@ import {Router} from '@angular/router';
 export class GameComponent {
   private gameService = inject(GameService);
   private highscoresService = inject(HighscoresService);
-  game = signal<Game>({board: [][1], snakeLength: 1, isFinished: false});
-  loading = signal(true);
+  game = signal<Game>({board: [][1], snakeLength: 1, isFinished: true});
+  loading = signal(false);
   error = signal<string | null>(null);
 
   private boardSubscription!: Subscription;
   private snakeSubscription!: Subscription;
   direction: number = 1;
   usernameInput: string = "";
+
   ngOnInit() {
     // this.boardSubscription = interval(100200)
     //   .subscribe(() => {this.getApiBoard()});
     //this.startGame();
     //if request ok then start to nizej
-    this.gameService.getBoard().subscribe({
-      next: (game) => {
-        this.game.set(game);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err.message || 'Unknown error');
-        this.loading.set(false);
-      }
-    });
+    // this.gameService.getBoard().subscribe({//mock one get
+    //   next: (game) => {
+    //     this.game.set(game);
+    //     this.loading.set(false);
+    //   },
+    //   error: (err) => {
+    //     this.error.set(err.message || 'Unknown error');
+    //     this.loading.set(false);
+    //   }
+    // });
     // this.boardSubscription = interval(300).subscribe(() => {
     //   this.getApiBoard();
     // });
@@ -87,8 +85,6 @@ export class GameComponent {
       month: "numeric",
       year: "numeric"
     };
-    // console.log(this.usernameInput);
-    // console.log(formatDate(dateTimestampProvider.now(), "dd-MM-yyyy", "en-GB"));
     delay(200);
     alert("Your score has been saved!");
     this.highscoresService.setHighScore({
@@ -98,9 +94,9 @@ export class GameComponent {
     });
   }
 
-  @HostListener('window:keydown',['$event'])
+  @HostListener('window:keydown', ['$event'])
   handleKeysDown(event: KeyboardEvent) {
-    switch(event.key) {
+    switch (event.key) {
       case 'ArrowUp':
       case 'w':
         console.log(1);
