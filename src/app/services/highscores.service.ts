@@ -37,15 +37,23 @@ export class HighscoresService {
   }
 
   setHighScore(highscore: { score: number; username: string }): void {
-    let tempHighscore = {
-      username: highscore.username,
-      score: highscore.score,
-      ip: this.http.get<IPRequest>('https://geolocation-db.com/json/').pipe(
+    let tempIp;
+      this.http.get<IPRequest>('https://geolocation-db.com/json/').subscribe({
+      next: (ip) => {
+        tempIp = ip.IPv4;
+      },
+      error: (err) => {
         catchError(err => {
           console.error('Błąd pobierania ip:', err);
           return throwError(() => new Error('Nie udało się pobrać ip.'));
         })
-      )
+      }
+    })
+
+    let tempHighscore = {
+      username: highscore.username,
+      score: highscore.score,
+      ip: tempIp
     }
     this.http.post(this.apiUrl, tempHighscore).subscribe({//do przetestowania
         error: (err) => {

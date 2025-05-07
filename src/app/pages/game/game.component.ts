@@ -28,7 +28,7 @@ export class GameComponent {
   private boardSubscription!: Subscription;
   private snakeSubscription!: Subscription;
 
-  private snakeSpeed$ = new BehaviorSubject<number>(600);
+  private snakeSpeed$ = new BehaviorSubject<number>(1000);
   private boardRefreshSpeed$ = new BehaviorSubject<number>(200);
 
   direction: number = 1;
