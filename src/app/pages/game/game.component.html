@@ -6,7 +6,7 @@
       <p class="error">{{ error() }}</p>
     } @else if (game().isFinished) {
       <h1>Save Your Score</h1>
-      <p class="save-paragraph">Your score: {{ game().snakeLength }}</p>
+      <p class="save-paragraph">Your score: {{ this.game().snakeLength }}</p>
       <a>Username:</a>
       <input type="text" value="Username" class="username-input" title="Enter your username"
              [(ngModel)]="usernameInput">

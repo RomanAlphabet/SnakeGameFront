@@ -32,14 +32,14 @@ html {
   .cell {
     pointer-events: none;
     aspect-ratio: 1;
-    border: 2px solid #9e9d9e;
-  }
-
-  .cell-1 {
-    background-color: #0b850b;
+    border: 1px solid #9e9d9e;
   }
 
   .cell-2 {
+    background-color: #0b850b;
+  }
+
+  .cell-1 {
     background-color: #cf0404;
   }
 
@@ -83,11 +83,11 @@ html.light-mode {
     transition: 300ms;
   }
 
-  .cell-1 {
+  .cell-2 {
     background-color: #0fbf0f;
   }
 
-  .cell-2 {
+  .cell-1 {
     background-color: #ccbd18;
   }
 
