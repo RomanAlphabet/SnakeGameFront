@@ -1,10 +1,9 @@
 import {Component, HostListener, inject, signal} from '@angular/core';
 import {Game, GameService} from '../../services/game.service';
-import {delay, interval, Subscription} from 'rxjs';
-import {formatDate, NgForOf, NgIf} from '@angular/common';
+import {BehaviorSubject, delay, interval, Subscription, switchMap, tap} from 'rxjs';
+import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HighscoresService} from '../../services/highscores.service';
-import {dateTimestampProvider} from 'rxjs/internal/scheduler/dateTimestampProvider';
 
 @Component({
   selector: 'app-game',
@@ -24,30 +23,35 @@ export class GameComponent {
   loading = signal(true);
   error = signal<string | null>(null);
 
-  speed = signal<number>(600);
+  isGameStarted = signal<boolean>(false);
 
   private boardSubscription!: Subscription;
   private snakeSubscription!: Subscription;
+
+  private snakeSpeed$ = new BehaviorSubject<number>(600);
+  private boardRefreshSpeed$ = new BehaviorSubject<number>(200);
+
   direction: number = 1;
+  sizeInput: number = 15;
   usernameInput: string = "";
 
-
   ngOnInit() {
-    this.startGame();
+    //this.startGame();
   }
 
-  startGame() {
-    this.gameService.startGame().subscribe({
-      next: (value) => {
-        this.boardSubscription = interval(100).subscribe(() => {
-          this.getApiBoard();
-          this.speed.set(600 / (Math.pow(2, this.game().snakeLength - 2)));
-        });
-        this.snakeSubscription = interval(this.speed())
-          .subscribe(() => {
-            //console.log(this.direction)
-            this.setSnakeMove(this.direction);
-          });
+  startGame(size: number) {
+    this.isGameStarted.set(true);
+    this.gameService.startGame(size).subscribe({
+      next: () => {
+        this.snakeSubscription = this.snakeSpeed$.pipe(
+          switchMap(speed => interval(speed)),
+          tap(() => this.gameService.moveSnake({direction: this.direction}).subscribe())
+        ).subscribe();
+
+        this.boardSubscription = this.boardRefreshSpeed$.pipe(
+          switchMap(speed => interval(speed)),
+          tap(() => this.getApiBoard())
+        ).subscribe();
       },
       error: (err) => {
         this.error.set(err.message || 'Unknown error');
@@ -59,10 +63,17 @@ export class GameComponent {
   getApiBoard() {
     this.gameService.getBoard().subscribe({
       next: (game) => {
+        if (this.game().snakeLength < game.snakeLength) {
+          this.updateSnakeSpeed(this.snakeSpeed$.value / 1.07);
+          if (game.snakeLength == 5) {
+            this.updateBoardRefreshSpeed(150);
+          } else if (game.snakeLength == 8) {
+            this.updateBoardRefreshSpeed(100);
+          }
+        }
         this.game.set(game);
         this.loading.set(false);
         if (game.isFinished) {
-          console.log(game.snakeLength)
           this.snakeSubscription?.unsubscribe();
           this.boardSubscription?.unsubscribe();
         }
@@ -74,13 +85,22 @@ export class GameComponent {
     });
   }
 
-  setSnakeMove(direction: number) {
-    this.gameService.moveSnake({'direction': direction}).subscribe();
-  }
-
   ngOnDestroy() {
     this.boardSubscription?.unsubscribe();
     this.snakeSubscription?.unsubscribe();
+  }
+
+  updateSnakeSpeed(newSpeed: number) {
+    this.snakeSpeed$.next(newSpeed);
+  }
+
+  updateBoardRefreshSpeed(newSpeed: number) {
+    this.boardRefreshSpeed$.next(newSpeed);
+  }
+
+  validateSizeInput(value: number) {
+    if (value < 5) this.sizeInput = 5;
+    if (value > 25) this.sizeInput = 25;
   }
 
   handleSaveScoreButtonClicked() {

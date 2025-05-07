@@ -1,6 +1,18 @@
 <div class="game-screen">
   <div class="content">
-    @if (loading()) {
+    @if (!isGameStarted()) {
+      <h1>Choose your map</h1>
+      <a>{{sizeInput}}</a>
+      <input
+        type="range"
+        [(ngModel)]="sizeInput"
+        [min]="5"
+        [max]="25"
+        (ngModelChange)="validateSizeInput($event)"
+      >
+      <button title="Start game" (click)="startGame(sizeInput)">Start game</button>
+    }
+    @else if (loading()) {
       <p>Loading...</p>
     } @else if (error()) {
       <p class="error">{{ error() }}</p>
@@ -11,7 +23,7 @@
       <input type="text" value="Username" class="username-input" title="Enter your username"
              [(ngModel)]="usernameInput">
       <button title="Save score" (click)="handleSaveScoreButtonClicked()">Save score</button>
-    } @else {
+    }  @else {
       <h1>Snake Game</h1>
       <table *ngIf="this.game().board.length > 0">
         <tr *ngFor="let row of this.game().board">
